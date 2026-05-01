@@ -41,4 +41,4 @@ jobs:
 
       # 3. Запускаємо браузерні тести окремо
       - name: Run Playwright tests
-        run: npx playwright test
+        run: npx playwright test tests.spec.js
