@@ -1,1 +1,60 @@
-<h1>Привіт з головної гілки</h1>
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>UniDone - Lab 3</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding-top: 50px; }
+        #status-badge { 
+            color: #646cff; 
+            font-weight: bold; 
+            border: 1px solid #646cff; 
+            padding: 2px 10px; 
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        .container { max-width: 400px; margin: 0 auto; text-align: left; }
+    </style>
+</head>
+<body>
+
+    <h1>UniDone</h1>
+    
+    <!-- Блок для відображення статусу з .env файлів -->
+    <div id="status-badge">Завантаження...</div>
+
+    <div class="container">
+        <input type="text" id="taskInput" placeholder="Нове завдання">
+        <button id="addBtn">Додати</button>
+        <ul id="taskList"></ul>
+    </div>
+
+    <!-- основний скрипт для списку завдань -->
+    <script>
+        document.getElementById('addBtn').onclick = () => {
+            const val = document.getElementById('taskInput').value;
+            if (val) {
+                const li = document.createElement('li');
+                li.textContent = val;
+                document.getElementById('taskList').appendChild(li);
+                document.getElementById('taskInput').value = '';
+            }
+        };
+    </script>
+
+    <!-- скрипт для Кроку 2 (Змінні оточення) -->
+    <script type="module">
+        // Vite використовує import.meta.env для доступу до змінних з .env
+        const appStatus = import.meta.env.VITE_APP_STATUS;
+        const badge = document.getElementById('status-badge');
+        
+        if (appStatus) {
+            badge.textContent = appStatus;
+        } else {
+            badge.textContent = "Змінна не знайдена";
+        }
+    </script>
+
+</body>
+</html>
