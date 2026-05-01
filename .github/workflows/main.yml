@@ -17,15 +17,26 @@ jobs:
   # Job для збірки та тестування
   build-and-test:
     name: Build and Test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # <--- ЦЕ ПОЧАТОК 2 КРОКУ (Середовище)
 
     steps:
       #  Отримання коду з репозиторію
       - name: Checkout repository
         uses: actions/checkout@v4
 
+        # --- ДАЛІ ЙДУТЬ ПУНКТИ 2.2 - 2.5 З  МЕТОДИЧКИ ---
+
       #  Налаштування Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20' 
+        
+      - name: Install dependencies # <--- 2.3 Встановлення бібліотек
+        run: npm ci
+
+      - name: Run linter # <--- 2.4 Перевірка на помилки в коді
+        run: npm run lint
+
+      - name: Run unit tests # <--- 2.5 Запуск тестів
+        run: npm run test:unit
