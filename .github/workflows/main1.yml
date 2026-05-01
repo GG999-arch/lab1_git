@@ -1,30 +1,24 @@
 name: CI/CD Pipeline
 
-# Тригери для запуску пайплайну
 on:
-  # Запуск при push у гілки main та develop
   push:
     branches:
       - main
       - develop
-  # Запуск при створенні Pull Request
   pull_request:
     branches:
       - main
       - develop
 
 jobs:
-  # Job для збірки та тестування
   build-and-test:
     name: Build and Test
     runs-on: ubuntu-latest
 
     steps:
-      # Отримання коду з репозиторію
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Налаштування Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -33,17 +27,18 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Встановлюємо браузери для Playwright, щоб тести не падали
+      # 1. Встановлюємо браузери (без цього Playwright не запрацює)
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
       - name: Run linter
         run: npm run lint
 
-      # Запускаємо звичайні unit-тести (Vitest)
+      # 2. Запускаємо ТІЛЬКИ ті тести, які лежать у папці src (юніт-тести)
+      # Це щоб Vitest не чіпав tests.spec.js
       - name: Run unit tests
-        run: npm run test:unit
+        run: npx vitest run src/
 
-      # Запускаємо браузерні тести (Playwright)
+      # 3. Запускаємо браузерні тести окремо
       - name: Run Playwright tests
         run: npx playwright test
