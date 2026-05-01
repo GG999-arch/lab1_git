@@ -2,13 +2,9 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches:
-      - main
-      - develop
+    branches: [main, develop]
   pull_request:
-    branches:
-      - main
-      - develop
+    branches: [main, develop]
 
 jobs:
   build-and-test:
@@ -27,18 +23,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # 1. Встановлюємо браузери (без цього Playwright не запрацює)
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
       - name: Run linter
         run: npm run lint
 
-      # 2. Запускаємо ТІЛЬКИ ті тести, які лежать у папці src (юніт-тести)
-      # Це щоб Vitest не чіпав tests.spec.js
       - name: Run unit tests
         run: npx vitest run src/
 
-      # 3. Запускаємо браузерні тести окремо
+      # КРИТИЧНИЙ КРОК: Запускаємо сервер у фоні та чекаємо, поки він "прокинеться"
       - name: Run Playwright tests
-        run: npx playwright test tests.spec.js
+        run: |
+          npm run dev & 
+          npx wait-on http://localhost:5173 && npx playwright test tests.spec.js
