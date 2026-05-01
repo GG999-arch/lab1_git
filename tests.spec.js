@@ -1,6 +1,6 @@
-import { test, expect } from 'vitest';
+import { test, expect } from '@playwright/test';
 
-test('Крок 4: Додавання завдання', async () => {
+test('Крок 4: Додавання завдання', async ({ page }) => {
   // Заходимо на сайт, який розгорне Vite
   await page.goto('http://localhost:5173/');
 

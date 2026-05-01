@@ -17,26 +17,33 @@ jobs:
   # Job для збірки та тестування
   build-and-test:
     name: Build and Test
-    runs-on: ubuntu-latest # <--- ЦЕ ПОЧАТОК 2 КРОКУ (Середовище)
+    runs-on: ubuntu-latest
 
     steps:
-      #  Отримання коду з репозиторію
+      # Отримання коду з репозиторію
       - name: Checkout repository
         uses: actions/checkout@v4
 
-        # --- ДАЛІ ЙДУТЬ ПУНКТИ 2.2 - 2.5 З  МЕТОДИЧКИ ---
-
-      #  Налаштування Node.js
+      # Налаштування Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20' 
-        
-      - name: Install dependencies # <--- 2.3 Встановлення бібліотек
+          node-version: '20'
+
+      - name: Install dependencies
         run: npm ci
 
-      - name: Run linter # <--- 2.4 Перевірка на помилки в коді
+      # Встановлюємо браузери для Playwright, щоб тести не падали
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Run linter
         run: npm run lint
 
-      - name: Run unit tests # <--- 2.5 Запуск тестів
+      # Запускаємо звичайні unit-тести (Vitest)
+      - name: Run unit tests
         run: npm run test:unit
+
+      # Запускаємо браузерні тести (Playwright)
+      - name: Run Playwright tests
+        run: npx playwright test
