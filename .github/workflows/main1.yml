@@ -32,7 +32,7 @@ jobs:
       - name: Run unit tests
         run: npx vitest run src/
 
-      # КРИТИЧНИЙ КРОК: Запускаємо сервер у фоні та чекаємо, поки він "прокинеться"
+      # КРИТИЧНИЙ КРОК: --Запускаємо сервер у фоні та чекаємо, поки він "прокинеться"
       - name: Run Playwright tests
         run: |
           npm run dev & 
